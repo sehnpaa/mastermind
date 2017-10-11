@@ -1,0 +1,101 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.Code-peg {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  float: left;
+  margin: 4px;
+}
+
+.Keys {
+  float: left;
+  width: 60px;
+  height: 60px;
+}
+
+.Key-peg {
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  margin: 2px;
+  float: left;
+}
+
+.Code-hole {
+  height: 38px;
+  width: 38px;
+  border-radius: 50%;
+  float: left;
+  margin: 10px;
+}
+
+.Key-hole {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  margin: 8px;
+  float: left;
+}
+
+#Row {
+  height: 60px;
+  width: 300px;
+}
+
+/* http://paletton.com/#uid=7011r1kpJmrgUuvlIq7tAihBxcZkpJmrgUuvlIq7tAihBxcZkpJmrgUuvlIq7tAihBxcZk2mbN5Ng038a33W8h4C62 */
+
+.Grey {
+  background-color: #4D4A58;
+}
+
+.Red {
+  background-color: #B32723;
+}
+
+.Yellow {
+  background-color: #B39C23;
+}
+
+.Blue {
+  background-color: #2C0792;
+}
+
+.Green {
+  background-color: #1C8D23;
+}
+
+.Black {
+  background-color: #19181B;
+}
+
+.White {
+  background-color: #F5F4FE;
+}
+
+.Dark-Grey {
+  background-color: #333237;
+}
