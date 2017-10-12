@@ -19,6 +19,7 @@ interface EmptyKeySlot {}
 interface Row {
   codeSlots: Array<CodeSlot>;
   keySlots: Array<KeySlot>;
+  status: RowStatus;
 }
 
 interface State {
@@ -40,8 +41,25 @@ const CodeHole: EmptyCodeSlot = {
   color: 'Dark-Grey'
 };
 
+interface ActiveRow {
+  kind: string;
+}
+
+interface InactiveRow {
+  kind: string;
+}
+
+const activeRow: ActiveRow = {
+  kind: 'activeRow'
+};
+
+const inactiveRow: InactiveRow = {
+  kind: 'inactiveRow',
+};
+
 type CodeSlot = CodePeg | EmptyCodeSlot;
 type KeySlot = KeyPeg | EmptyKeySlot;
+type RowStatus = ActiveRow | InactiveRow;
 
 const initialState: State = {
   board: [
@@ -52,7 +70,8 @@ const initialState: State = {
         CodeHole,
         CodeHole
       ],
-      keySlots: [] as any
+      keySlots: [] as any,
+      status: activeRow
     }, {
       codeSlots: [
         RedCodePeg,
@@ -60,7 +79,8 @@ const initialState: State = {
         RedCodePeg,
         RedCodePeg
       ],
-      keySlots: [] as any
+      keySlots: [] as any,
+      status: inactiveRow
     }
   ]
 };
@@ -94,10 +114,23 @@ const nextColor = (color): string => {
   }
 };
 
-const slotLens = (rowIndex: number, slotIndex: number): State => {
+const rowLens = (rowIndex: number): State => {
   return R.compose(
     R.lens(R.prop('board'), R.assoc('board')),
-    R.lensIndex(rowIndex),
+    R.lensIndex(rowIndex)
+  );
+};
+
+const rowStatusLens = (rowIndex: number): State => {
+  return R.compose(
+    rowLens(rowIndex),
+    R.lens(R.prop('status'), R.assoc('status'))
+  );
+};
+
+const slotLens = (rowIndex: number, slotIndex: number): State => {
+  return R.compose(
+    rowLens(rowIndex),
     R.lens(R.prop('codeSlots'), R.assoc('codeSlots')),
     R.lensIndex(slotIndex)
   );
@@ -129,10 +162,27 @@ const putCodePeg = (
   return updateSlot(state, rowIndex, slotIndex, newPeg);
 };
 
+const getRowStatus = (state, rowIndex): RowStatus => {
+  const lens = rowStatusLens(rowIndex);
+  return R.view(lens, state);
+};
+
+const handleSlotClick = (state, rowIndex, slotIndex): State => {
+  const status = getRowStatus(state, rowIndex);
+  switch (status.kind) {
+    case 'activeRow':
+      return putCodePeg(state, rowIndex, slotIndex);
+    case 'inactiveRow':
+      return state;
+    default:
+      return state;
+  }
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'SlotClick':
-      return putCodePeg(state, action.rowIndex, action.slotIndex);
+      return handleSlotClick(state, action.rowIndex, action.slotIndex);
     default:
       return state;
   }
