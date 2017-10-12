@@ -74,10 +74,10 @@ const initialState: State = {
       status: activeRow
     }, {
       codeSlots: [
-        RedCodePeg,
-        GreenCodePeg,
-        RedCodePeg,
-        RedCodePeg
+        CodeHole,
+        CodeHole,
+        CodeHole,
+        CodeHole
       ],
       keySlots: [] as any,
       status: inactiveRow
