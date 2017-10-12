@@ -7,6 +7,7 @@ interface CodePeg {
 
 interface KeyPeg {
   kind: string;
+  color: string;
 }
 
 interface EmptyCodeSlot {
@@ -41,6 +42,21 @@ const CodeHole: EmptyCodeSlot = {
   color: 'Dark-Grey'
 };
 
+const BlackKeyPeg: KeyPeg = {
+  kind: 'Key-peg',
+  color: 'Black'
+};
+
+const WhiteKeyPeg: KeyPeg = {
+  kind: 'Key-peg',
+  color: 'White'
+};
+
+const KeyHole: EmptyKeySlot = {
+  kind: 'Key-hole',
+  color: 'Dark-Grey'
+};
+
 interface ActiveRow {
   kind: string;
 }
@@ -70,7 +86,12 @@ const initialState: State = {
         CodeHole,
         CodeHole
       ],
-      keySlots: [] as any,
+      keySlots: [
+        KeyHole,
+        KeyHole,
+        KeyHole,
+        KeyHole
+      ],
       status: activeRow
     }, {
       codeSlots: [
@@ -79,7 +100,12 @@ const initialState: State = {
         CodeHole,
         CodeHole
       ],
-      keySlots: [] as any,
+      keySlots: [
+        KeyHole,
+        KeyHole,
+        KeyHole,
+        KeyHole
+      ],
       status: inactiveRow
     }
   ]

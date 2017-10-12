@@ -5,3 +5,9 @@ export const slotClick = (rowIndex, slotIndex) => {
     slotIndex: slotIndex
   };
 };
+
+export const calcKeyPegs = () => {
+  return {
+    type: 'CalcKeyPegs',
+  };
+};
