@@ -20,7 +20,6 @@ interface EmptyKeySlot {}
 interface Row {
   codeSlots: Array<CodeSlot>;
   keySlots: Array<KeySlot>;
-  status: RowStatus;
 }
 
 interface State {
@@ -108,23 +107,8 @@ const initialState: State = {
         KeyHole,
         KeyHole,
         KeyHole
-      ],
-      status: activeRow
-    }/*, {
-      codeSlots: [
-        CodeHole,
-        CodeHole,
-        CodeHole,
-        CodeHole
-      ],
-      keySlots: [
-        KeyHole,
-        KeyHole,
-        KeyHole,
-        KeyHole
-      ],
-      status: inactiveRow
-    }*/
+      ]
+    }
   ]
 };
 
@@ -206,8 +190,20 @@ const putCodePeg = (
 };
 
 const getRowStatus = (state, rowIndex): RowStatus => {
-  const lens = rowStatusLens(rowIndex);
-  return R.view(lens, state);
+  const l = R.compose(
+    rowLens(rowIndex),
+    R.lens(R.prop('codeSlots'), R.assoc('codeSlots'))
+  );
+  var codeSlots = R.view(l, state);
+  var guessStatus = guessCompleteness(codeSlots);
+  switch (guessStatus.kind) {
+    case 'incompleteGuess':
+      return activeRow;
+    case 'completeGuess':
+      return inactiveRow;
+    default:
+      return inactiveRow;
+  }
 };
 
 const handleSlotClick = (state, rowIndex, slotIndex): State => {
@@ -231,8 +227,7 @@ const guessCompleteness = (codeSlots: Array<CodeSlot>): Guess => {
 const updateKeyPegs = (codeSlots: Array<CodeSlot>): Row => {
   return {
     codeSlots: codeSlots,
-    keySlots: [BlackKeyPeg, BlackKeyPeg, BlackKeyPeg, KeyHole],
-    status: inactiveRow
+    keySlots: [BlackKeyPeg, BlackKeyPeg, BlackKeyPeg, KeyHole]
   };
 };
 
