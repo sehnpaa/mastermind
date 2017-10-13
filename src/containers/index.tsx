@@ -47,7 +47,6 @@ const Mastermind = ({ state, dispatch }) => {
   return (
     <div>
       <Row state={state} dispatch={dispatch} rowIndex={0}/>
-      <Row state={state} dispatch={dispatch} rowIndex={1}/>
     </div>
   );
 };

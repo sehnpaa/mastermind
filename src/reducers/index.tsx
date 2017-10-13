@@ -73,9 +73,26 @@ const inactiveRow: InactiveRow = {
   kind: 'inactiveRow',
 };
 
+interface CompleteGuess {
+  kind: string;
+}
+
+interface IncompleteGuess {
+  kind: string;
+}
+
+const CompleteGuess: Guess = {
+  kind: 'completeGuess'
+};
+
+const IncompleteGuess: Guess = {
+  kind: 'incompleteGuess',
+};
+
 type CodeSlot = CodePeg | EmptyCodeSlot;
 type KeySlot = KeyPeg | EmptyKeySlot;
 type RowStatus = ActiveRow | InactiveRow;
+type Guess = CompleteGuess | IncompleteGuess;
 
 const initialState: State = {
   board: [
@@ -93,7 +110,7 @@ const initialState: State = {
         KeyHole
       ],
       status: activeRow
-    }, {
+    }/*, {
       codeSlots: [
         CodeHole,
         CodeHole,
@@ -107,7 +124,7 @@ const initialState: State = {
         KeyHole
       ],
       status: inactiveRow
-    }
+    }*/
   ]
 };
 
@@ -205,10 +222,41 @@ const handleSlotClick = (state, rowIndex, slotIndex): State => {
   }
 };
 
-const reducer = (state = initialState, action) => {
+const guessCompleteness = (codeSlots: Array<CodeSlot>): Guess => {
+  return (codeSlots.some(x => x.kind === 'Code-hole'))
+    ? IncompleteGuess
+    : CompleteGuess;
+};
+
+const updateKeyPegs = (codeSlots: Array<CodeSlot>): Row => {
+  return {
+    codeSlots: codeSlots,
+    keySlots: [BlackKeyPeg, BlackKeyPeg, BlackKeyPeg, KeyHole],
+    status: inactiveRow
+  };
+};
+
+const handleCalcKeyPegs = (state: State): State => {
+  const l = R.lens(R.prop('board'), R.assoc('board'));
+  const newBoard = state.board.map(row => {
+    switch (guessCompleteness(row.codeSlots)) {
+      case CompleteGuess:
+        return updateKeyPegs(row.codeSlots);
+      case IncompleteGuess:
+        return row;
+      default:
+        return row;
+    }
+  });
+  return R.set(l, newBoard, state);
+};
+
+const reducer = (state: State = initialState, action) => {
   switch (action.type) {
     case 'SlotClick':
       return handleSlotClick(state, action.rowIndex, action.slotIndex);
+    case 'CalcKeyPegs':
+      return handleCalcKeyPegs(state);
     default:
       return state;
   }
