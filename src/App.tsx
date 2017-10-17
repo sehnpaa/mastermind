@@ -6,7 +6,7 @@ import Mastermind from './containers';
 
 const logo = require('./logo.svg');
 
-export const App = function({ state }) {
+export const App = function({ state }: any) {
   return (
     <div className="App">
       <div className="App-header">

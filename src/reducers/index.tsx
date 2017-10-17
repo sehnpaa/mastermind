@@ -40,8 +40,7 @@ const nextCodeSlot = (codeSlot: T.CodeSlot): T.CodeSlot => {
   }
 };
 
-const nextColor = (color): string => {
-  switch (color) {
+const nextColor = (color: string): string => { switch (color) {
     case 'Red':
       return 'Blue';
     case 'Blue':
@@ -88,7 +87,7 @@ const getCodeSlots = (
   return R.view(l, state);
 };
 
-const getRowStatus = (state, rowIndex): T.RowStatus => {
+const getRowStatus = (state: T.State, rowIndex: number): T.RowStatus => {
   const codeSlots = getCodeSlots(state, rowIndex);
   const guessStatus = guessCompleteness(codeSlots);
   switch (guessStatus.kind) {
@@ -105,14 +104,14 @@ const addNewRow = (state: T.State): T.State => {
   const l = L.boardProp();
   return R.over(
     l,
-    (n) => {
+    (n: Array<T.Row>) => {
       return n.concat(emptyRow());
     },
     state
   );
 };
 
-const handleSlotClick = (state, rowIndex, slotIndex): T.State => {
+const handleSlotClick = (state: T.State, rowIndex: number, slotIndex: number): T.State => {
   const status = getRowStatus(state, rowIndex);
   switch (status.kind) {
     case 'activeRow':
@@ -140,7 +139,7 @@ const handleCalcKeyPegs = (state: T.State): T.State => {
       const a = R.set(l2, keyPegs, state);
       const b = R.over(
         l3,
-        (n) => {
+        (n: Array<T.Row>) => {
          return n.concat(emptyRow());
         },
         a
@@ -153,7 +152,7 @@ const handleCalcKeyPegs = (state: T.State): T.State => {
   }
 };
 
-const reducer = (state: T.State = initialState, action) => {
+const reducer = (state: T.State = initialState, action: any) => {
   switch (action.type) {
     case 'SlotClick':
       return handleSlotClick(state, action.rowIndex, action.slotIndex);

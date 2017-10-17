@@ -50,7 +50,7 @@ export const lastRowLens = () => {
   );
 };
 
-export const codeSlotsLens = (rowIndex) => {
+export const codeSlotsLens = (rowIndex: number) => {
   return compose(
     rowLens(rowIndex),
     codeSlotsProp()

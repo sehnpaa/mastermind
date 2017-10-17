@@ -96,3 +96,13 @@ export type CodeSlot = CodePeg | EmptyCodeSlot;
 export type KeySlot = KeyPeg | EmptyKeySlot;
 export type RowStatus = ActiveRow | InactiveRow;
 export type Guess = CompleteGuess | IncompleteGuess;
+
+export interface SlotClickAction {
+  type: string;
+  rowIndex: number;
+  slotIndex: number;
+}
+
+export interface CalcKeyPegsAction {
+  type: string;
+}

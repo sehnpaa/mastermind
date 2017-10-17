@@ -1,4 +1,6 @@
-export const slotClick = (rowIndex, slotIndex) => {
+import { CalcKeyPegsAction, SlotClickAction } from '../Types';
+
+export const slotClick = (rowIndex: number, slotIndex: number): SlotClickAction => {
   return {
     type: 'SlotClick',
     rowIndex: rowIndex,
@@ -6,7 +8,7 @@ export const slotClick = (rowIndex, slotIndex) => {
   };
 };
 
-export const calcKeyPegs = () => {
+export const calcKeyPegs = (): CalcKeyPegsAction => {
   return {
     type: 'CalcKeyPegs',
   };
