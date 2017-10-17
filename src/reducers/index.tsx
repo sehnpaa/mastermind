@@ -1,5 +1,6 @@
 import * as R from 'ramda';
 import * as T from '../Types';
+import * as L from '../Lenses';
 
 const emptyRow = (): T.Row => {
   return {
@@ -54,34 +55,12 @@ const nextColor = (color): string => {
   }
 };
 
-const rowLens = (rowIndex: number): T.State => {
-  return R.compose(
-    R.lens(R.prop('board'), R.assoc('board')),
-    R.lensIndex(rowIndex)
-  );
-};
-
-const rowStatusLens = (rowIndex: number): T.State => {
-  return R.compose(
-    rowLens(rowIndex),
-    R.lens(R.prop('status'), R.assoc('status'))
-  );
-};
-
-const slotLens = (rowIndex: number, slotIndex: number): T.State => {
-  return R.compose(
-    rowLens(rowIndex),
-    R.lens(R.prop('codeSlots'), R.assoc('codeSlots')),
-    R.lensIndex(slotIndex)
-  );
-};
-
 const updateSlot = (
     state: T.State,
     rowIndex: number,
     slotIndex: number,
     newPeg: T.CodePeg): T.State => {
-  const lens = slotLens(rowIndex, slotIndex);
+  const lens = L.slotLens(rowIndex, slotIndex);
   return R.set(lens, newPeg, state);
 };
 
@@ -89,7 +68,7 @@ const getSlot = (
     state: T.State,
     rowIndex: number,
     slotIndex: number): T.CodeSlot => {
-  const lens = slotLens(rowIndex, slotIndex);
+  const lens = L.slotLens(rowIndex, slotIndex);
   return R.view(lens, state);
 };
 
@@ -103,10 +82,7 @@ const putCodePeg = (
 };
 
 const getRowStatus = (state, rowIndex): T.RowStatus => {
-  const l = R.compose(
-    rowLens(rowIndex),
-    R.lens(R.prop('codeSlots'), R.assoc('codeSlots'))
-  );
+  const l = L.codeSlotsLens(rowIndex);
   const codeSlots = R.view(l, state);
   const guessStatus = guessCompleteness(codeSlots);
   switch (guessStatus.kind) {
@@ -148,20 +124,13 @@ const guessCompleteness = (codeSlots: Array<T.CodeSlot>): T.Guess => {
     : T.CompleteGuess;
 };
 
-const lastRowLens = () => {
-  return R.compose(
-    R.lens(R.prop('board'), R.assoc('board')),
-    R.lensIndex(-1)
-  );
-};
-
 const handleCalcKeyPegs = (state: T.State): T.State => {
   const l = R.compose(
-    lastRowLens(),
+    L.lastRowLens(),
     R.lens(R.prop('codeSlots'), R.assoc('codeSlots'))
   );
   const l2 = R.compose(
-    lastRowLens(),
+    L.lastRowLens(),
     R.lens(R.prop('keySlots'), R.assoc('keySlots'))
   );
   const l3 = R.compose(
