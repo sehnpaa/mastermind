@@ -81,9 +81,15 @@ const putCodePeg = (
   return updateSlot(state, rowIndex, slotIndex, newPeg);
 };
 
-const getRowStatus = (state, rowIndex): T.RowStatus => {
+const getCodeSlots = (
+    state: T.State,
+    rowIndex: number): Array<T.CodeSlot> => {
   const l = L.codeSlotsLens(rowIndex);
-  const codeSlots = R.view(l, state);
+  return R.view(l, state);
+};
+
+const getRowStatus = (state, rowIndex): T.RowStatus => {
+  const codeSlots = getCodeSlots(state, rowIndex);
   const guessStatus = guessCompleteness(codeSlots);
   switch (guessStatus.kind) {
     case 'incompleteGuess':
