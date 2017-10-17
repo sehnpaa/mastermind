@@ -99,22 +99,26 @@ type KeySlot = KeyPeg | EmptyKeySlot;
 type RowStatus = ActiveRow | InactiveRow;
 type Guess = CompleteGuess | IncompleteGuess;
 
+const emptyRow = (): Row => {
+  return {
+    codeSlots: [
+      CodeHole,
+      CodeHole,
+      CodeHole,
+      CodeHole
+    ],
+    keySlots: [
+      KeyHole,
+      KeyHole,
+      KeyHole,
+      KeyHole
+    ]
+  };
+};
+
 const initialState: State = {
   board: [
-    {
-      codeSlots: [
-        CodeHole,
-        CodeHole,
-        CodeHole,
-        CodeHole
-      ],
-      keySlots: [
-        KeyHole,
-        KeyHole,
-        KeyHole,
-        KeyHole
-      ]
-    }
+      emptyRow()
   ],
   solution: [RedCodePeg, GreenCodePeg, GreenCodePeg, BlueCodePeg]
 };
@@ -211,23 +215,6 @@ const getRowStatus = (state, rowIndex): RowStatus => {
     default:
       return inactiveRow;
   }
-};
-
-const emptyRow = (): Row => {
-  return {
-    codeSlots: [
-      CodeHole,
-      CodeHole,
-      CodeHole,
-      CodeHole
-    ],
-    keySlots: [
-      KeyHole,
-      KeyHole,
-      KeyHole,
-      KeyHole
-    ]
-  };
 };
 
 const addNewRow = (state: State): State => {
