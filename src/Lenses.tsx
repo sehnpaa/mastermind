@@ -1,38 +1,72 @@
-import * as R from 'ramda';
+import { assoc, compose, lens, lensIndex, prop } from 'ramda';
 import * as T from './Types';
 
+const lastLens = () => {
+  return lensIndex(-1);
+};
+
+const statusProp = () => {
+  return lens(prop('status'), assoc('status'));
+};
+
+const codeSlotsProp = () => {
+  return lens(prop('codeSlots'), assoc('codeSlots'));
+};
+
+const keySlotsProp = () => {
+  return lens(prop('keySlots'), assoc('keySlots'));
+};
+
+export const boardProp = (): T.State => {
+  return lens(prop('board'), assoc('board'));
+};
+
 export const rowLens = (rowIndex: number): T.State => {
-  return R.compose(
-    R.lens(R.prop('board'), R.assoc('board')),
-    R.lensIndex(rowIndex)
+  return compose(
+    boardProp(),
+    lensIndex(rowIndex)
   );
 };
 
 export const rowStatusLens = (rowIndex: number): T.State => {
-  return R.compose(
+  return compose(
     rowLens(rowIndex),
-    R.lens(R.prop('status'), R.assoc('status'))
+    statusProp()
   );
 };
 
 export const slotLens = (rowIndex: number, slotIndex: number): T.State => {
-  return R.compose(
+  return compose(
     rowLens(rowIndex),
-    R.lens(R.prop('codeSlots'), R.assoc('codeSlots')),
-    R.lensIndex(slotIndex)
+    codeSlotsProp(),
+    lensIndex(slotIndex)
   );
 };
 
 export const lastRowLens = () => {
-  return R.compose(
-    R.lens(R.prop('board'), R.assoc('board')),
-    R.lensIndex(-1)
+  return compose(
+    boardProp(),
+    lastLens()
   );
 };
 
 export const codeSlotsLens = (rowIndex) => {
-  return R.compose(
+  return compose(
     rowLens(rowIndex),
-    R.lens(R.prop('codeSlots'), R.assoc('codeSlots'))
+    codeSlotsProp()
+  );
+};
+
+export const codeSlotOfLastRowLens = () => {
+  return compose(
+    lastRowLens(),
+    codeSlotsProp()
+  );
+};
+
+export const keySlotOfLastRowLens = () => {
+  return compose(
+    lastRowLens(),
+    keySlotsProp()
   );
 };

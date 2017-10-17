@@ -102,7 +102,7 @@ const getRowStatus = (state, rowIndex): T.RowStatus => {
 };
 
 const addNewRow = (state: T.State): T.State => {
-  const l = R.lens(R.prop('board'), R.assoc('board'));
+  const l = L.boardProp();
   return R.over(
     l,
     (n) => {
@@ -131,18 +131,9 @@ const guessCompleteness = (codeSlots: Array<T.CodeSlot>): T.Guess => {
 };
 
 const handleCalcKeyPegs = (state: T.State): T.State => {
-  const l = R.compose(
-    L.lastRowLens(),
-    R.lens(R.prop('codeSlots'), R.assoc('codeSlots'))
-  );
-  const l2 = R.compose(
-    L.lastRowLens(),
-    R.lens(R.prop('keySlots'), R.assoc('keySlots'))
-  );
-  const l3 = R.compose(
-    R.lens(R.prop('board'), R.assoc('board'))
-  );
-
+  const l = L.codeSlotOfLastRowLens();
+  const l2 = L.keySlotOfLastRowLens();
+  const l3 = L.boardProp();
   switch (guessCompleteness(R.view(l, state))) {
     case T.CompleteGuess:
       const keyPegs = [T.BlackKeyPeg, T.BlackKeyPeg, T.BlackKeyPeg, T.KeyHole];
