@@ -1,129 +1,31 @@
 import * as R from 'ramda';
+import * as T from '../Types';
 
-interface CodePeg {
-  kind: string;
-  color: string;
-}
-
-interface KeyPeg {
-  kind: string;
-  color: string;
-}
-
-interface EmptyCodeSlot {
-  kind: string;
-  color: string;
-}
-
-interface EmptyKeySlot {}
-
-interface Row {
-  codeSlots: Array<CodeSlot>;
-  keySlots: Array<KeySlot>;
-}
-
-interface State {
-  board: Array<Row>;
-  solution: Array<CodeSlot>;
-}
-
-const RedCodePeg: CodePeg = {
-  kind: 'Code-peg',
-  color: 'Red'
-};
-
-const GreenCodePeg: CodePeg = {
-  kind: 'Code-peg',
-  color: 'Green'
-};
-
-const BlueCodePeg: CodePeg = {
-  kind: 'Code-peg',
-  color: 'Blue'
-};
-
-const CodeHole: EmptyCodeSlot = {
-  kind: 'Code-hole',
-  color: 'Dark-Grey'
-};
-
-const BlackKeyPeg: KeyPeg = {
-  kind: 'Key-peg',
-  color: 'Black'
-};
-
-const WhiteKeyPeg: KeyPeg = {
-  kind: 'Key-peg',
-  color: 'White'
-};
-
-const KeyHole: EmptyKeySlot = {
-  kind: 'Key-hole',
-  color: 'Dark-Grey'
-};
-
-interface ActiveRow {
-  kind: string;
-}
-
-interface InactiveRow {
-  kind: string;
-}
-
-const activeRow: ActiveRow = {
-  kind: 'activeRow'
-};
-
-const inactiveRow: InactiveRow = {
-  kind: 'inactiveRow',
-};
-
-interface CompleteGuess {
-  kind: string;
-}
-
-interface IncompleteGuess {
-  kind: string;
-}
-
-const CompleteGuess: Guess = {
-  kind: 'completeGuess'
-};
-
-const IncompleteGuess: Guess = {
-  kind: 'incompleteGuess',
-};
-
-type CodeSlot = CodePeg | EmptyCodeSlot;
-type KeySlot = KeyPeg | EmptyKeySlot;
-type RowStatus = ActiveRow | InactiveRow;
-type Guess = CompleteGuess | IncompleteGuess;
-
-const emptyRow = (): Row => {
+const emptyRow = (): T.Row => {
   return {
     codeSlots: [
-      CodeHole,
-      CodeHole,
-      CodeHole,
-      CodeHole
+      T.CodeHole,
+      T.CodeHole,
+      T.CodeHole,
+      T.CodeHole
     ],
     keySlots: [
-      KeyHole,
-      KeyHole,
-      KeyHole,
-      KeyHole
+      T.KeyHole,
+      T.KeyHole,
+      T.KeyHole,
+      T.KeyHole
     ]
   };
 };
 
-const initialState: State = {
+const initialState: T.State = {
   board: [
       emptyRow()
   ],
-  solution: [RedCodePeg, GreenCodePeg, GreenCodePeg, BlueCodePeg]
+  solution: [T.RedCodePeg, T.GreenCodePeg, T.GreenCodePeg, T.BlueCodePeg]
 };
 
-const nextCodeSlot = (codeSlot: CodeSlot): CodeSlot => {
+const nextCodeSlot = (codeSlot: T.CodeSlot): T.CodeSlot => {
   switch (codeSlot.kind) {
     case 'Code-peg': {
       return {
@@ -131,9 +33,9 @@ const nextCodeSlot = (codeSlot: CodeSlot): CodeSlot => {
         color: nextColor(codeSlot.color)
       };
     }
-    case 'Code-hole': return RedCodePeg;
+    case 'Code-hole': return T.RedCodePeg;
     default:
-      return RedCodePeg;
+      return T.RedCodePeg;
   }
 };
 
@@ -152,21 +54,21 @@ const nextColor = (color): string => {
   }
 };
 
-const rowLens = (rowIndex: number): State => {
+const rowLens = (rowIndex: number): T.State => {
   return R.compose(
     R.lens(R.prop('board'), R.assoc('board')),
     R.lensIndex(rowIndex)
   );
 };
 
-const rowStatusLens = (rowIndex: number): State => {
+const rowStatusLens = (rowIndex: number): T.State => {
   return R.compose(
     rowLens(rowIndex),
     R.lens(R.prop('status'), R.assoc('status'))
   );
 };
 
-const slotLens = (rowIndex: number, slotIndex: number): State => {
+const slotLens = (rowIndex: number, slotIndex: number): T.State => {
   return R.compose(
     rowLens(rowIndex),
     R.lens(R.prop('codeSlots'), R.assoc('codeSlots')),
@@ -175,32 +77,32 @@ const slotLens = (rowIndex: number, slotIndex: number): State => {
 };
 
 const updateSlot = (
-    state: State,
+    state: T.State,
     rowIndex: number,
     slotIndex: number,
-    newPeg: CodePeg): State => {
+    newPeg: T.CodePeg): T.State => {
   const lens = slotLens(rowIndex, slotIndex);
   return R.set(lens, newPeg, state);
 };
 
 const getSlot = (
-    state: State,
+    state: T.State,
     rowIndex: number,
-    slotIndex: number): CodeSlot => {
+    slotIndex: number): T.CodeSlot => {
   const lens = slotLens(rowIndex, slotIndex);
   return R.view(lens, state);
 };
 
 const putCodePeg = (
-    state: State,
+    state: T.State,
     rowIndex: number,
-    slotIndex: number): State => {
+    slotIndex: number): T.State => {
   const slot = getSlot(state, rowIndex, slotIndex);
   const newPeg = nextCodeSlot(slot);
   return updateSlot(state, rowIndex, slotIndex, newPeg);
 };
 
-const getRowStatus = (state, rowIndex): RowStatus => {
+const getRowStatus = (state, rowIndex): T.RowStatus => {
   const l = R.compose(
     rowLens(rowIndex),
     R.lens(R.prop('codeSlots'), R.assoc('codeSlots'))
@@ -209,15 +111,15 @@ const getRowStatus = (state, rowIndex): RowStatus => {
   const guessStatus = guessCompleteness(codeSlots);
   switch (guessStatus.kind) {
     case 'incompleteGuess':
-      return activeRow;
+      return T.activeRow;
     case 'completeGuess':
-      return inactiveRow;
+      return T.inactiveRow;
     default:
-      return inactiveRow;
+      return T.inactiveRow;
   }
 };
 
-const addNewRow = (state: State): State => {
+const addNewRow = (state: T.State): T.State => {
   const l = R.lens(R.prop('board'), R.assoc('board'));
   return R.over(
     l,
@@ -228,7 +130,7 @@ const addNewRow = (state: State): State => {
   );
 };
 
-const handleSlotClick = (state, rowIndex, slotIndex): State => {
+const handleSlotClick = (state, rowIndex, slotIndex): T.State => {
   const status = getRowStatus(state, rowIndex);
   switch (status.kind) {
     case 'activeRow':
@@ -240,10 +142,10 @@ const handleSlotClick = (state, rowIndex, slotIndex): State => {
   }
 };
 
-const guessCompleteness = (codeSlots: Array<CodeSlot>): Guess => {
+const guessCompleteness = (codeSlots: Array<T.CodeSlot>): T.Guess => {
   return (codeSlots.some(x => x.kind === 'Code-hole'))
-    ? IncompleteGuess
-    : CompleteGuess;
+    ? T.IncompleteGuess
+    : T.CompleteGuess;
 };
 
 const lastRowLens = () => {
@@ -253,7 +155,7 @@ const lastRowLens = () => {
   );
 };
 
-const handleCalcKeyPegs = (state: State): State => {
+const handleCalcKeyPegs = (state: T.State): T.State => {
   const l = R.compose(
     lastRowLens(),
     R.lens(R.prop('codeSlots'), R.assoc('codeSlots'))
@@ -267,8 +169,8 @@ const handleCalcKeyPegs = (state: State): State => {
   );
 
   switch (guessCompleteness(R.view(l, state))) {
-    case CompleteGuess:
-      const keyPegs = [BlackKeyPeg, BlackKeyPeg, BlackKeyPeg, KeyHole];
+    case T.CompleteGuess:
+      const keyPegs = [T.BlackKeyPeg, T.BlackKeyPeg, T.BlackKeyPeg, T.KeyHole];
       const a = R.set(l2, keyPegs, state);
       const b = R.over(
         l3,
@@ -278,14 +180,14 @@ const handleCalcKeyPegs = (state: State): State => {
         a
       );
       return b;
-    case IncompleteGuess:
+    case T.IncompleteGuess:
       return state;
     default:
       return state;
   }
 };
 
-const reducer = (state: State = initialState, action) => {
+const reducer = (state: T.State = initialState, action) => {
   switch (action.type) {
     case 'SlotClick':
       return handleSlotClick(state, action.rowIndex, action.slotIndex);
