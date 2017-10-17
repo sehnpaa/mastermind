@@ -26,19 +26,28 @@ const KeySlot = ({ board, dispatch, rowIndex, slotIndex}: any) => {
   );
 };
 
+const CodeSlots = (state, dispatch, rowIndex) => {
+  return state.board[rowIndex].codeSlots.map((_, index) => {
+    return (
+      <CodeSlot board={state.board} dispatch={dispatch} rowIndex={rowIndex} slotIndex={index} />
+    );
+  });
+};
+
+const KeySlots = (state, dispatch, rowIndex) => {
+  return state.board[rowIndex].keySlots.map((_, index) => {
+    return (
+      <KeySlot board={state.board} dispatch={dispatch} rowIndex={rowIndex} slotIndex={index} />
+    );
+  });
+};
+
 const Row = ({ state, dispatch, rowIndex }: any) => {
   return (
     <div id="Row" className="Grey">
-      <CodeSlot board={state.board} dispatch={dispatch} rowIndex={rowIndex} slotIndex={0} />
-      <CodeSlot board={state.board} dispatch={dispatch} rowIndex={rowIndex} slotIndex={1} />
-      <CodeSlot board={state.board} dispatch={dispatch} rowIndex={rowIndex} slotIndex={2} />
-      <CodeSlot board={state.board} dispatch={dispatch} rowIndex={rowIndex} slotIndex={3} />
-
+      {CodeSlots(state, dispatch, rowIndex)}
       <div className="Keys" onClick={a => { dispatch(calcKeyPegs()); }}>
-        <KeySlot board={state.board} dispatch={dispatch} rowIndex={rowIndex} slotIndex={0} />
-        <KeySlot board={state.board} dispatch={dispatch} rowIndex={rowIndex} slotIndex={1} />
-        <KeySlot board={state.board} dispatch={dispatch} rowIndex={rowIndex} slotIndex={2} />
-        <KeySlot board={state.board} dispatch={dispatch} rowIndex={rowIndex} slotIndex={3} />
+        {KeySlots(state, dispatch, rowIndex)}
       </div>
     </div>
   );
