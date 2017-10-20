@@ -87,16 +87,9 @@ const getCodeSlots = (
 };
 
 const getRowStatus = (state: T.State, rowIndex: number): T.RowStatus => {
-  const codeSlots = getCodeSlots(state, rowIndex);
-  const guessStatus = guessCompleteness(codeSlots);
-  switch (guessStatus.kind) {
-    case 'incompleteGuess':
-      return T.activeRow;
-    case 'completeGuess':
-      return T.inactiveRow;
-    default:
-      return T.inactiveRow;
-  }
+  return (state.board.length - 1 === rowIndex)
+    ? T.activeRow
+    : T.inactiveRow;
 };
 
 const addNewRow = (state: T.State): T.State => {
