@@ -40,7 +40,8 @@ const nextCodeSlot = (codeSlot: T.CodeSlot): T.CodeSlot => {
   }
 };
 
-const nextColor = (color: string): string => { switch (color) {
+const nextColor = (color: string): string => {
+  switch (color) {
     case 'Red':
       return 'Blue';
     case 'Blue':
