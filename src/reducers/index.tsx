@@ -2,26 +2,24 @@ import * as R from 'ramda';
 import * as T from '../Types';
 import * as L from '../Lenses';
 
-const emptyRow = (): T.Row => {
-  return {
-    codeSlots: [
-      T.CodeHole,
-      T.CodeHole,
-      T.CodeHole,
-      T.CodeHole
-    ],
-    keySlots: [
-      T.KeyHole,
-      T.KeyHole,
-      T.KeyHole,
-      T.KeyHole
-    ]
-  };
+const emptyRow: T.Row = {
+  codeSlots: [
+    T.CodeHole,
+    T.CodeHole,
+    T.CodeHole,
+    T.CodeHole
+  ],
+  keySlots: [
+    T.KeyHole,
+    T.KeyHole,
+    T.KeyHole,
+    T.KeyHole
+  ]
 };
 
 const initialState: T.State = {
   board: [
-      emptyRow()
+      emptyRow
   ],
   solution: [T.RedCodePeg, T.GreenCodePeg, T.GreenCodePeg, T.BlueCodePeg]
 };
@@ -106,7 +104,7 @@ const addNewRow = (state: T.State): T.State => {
   return R.over(
     l,
     (n: Array<T.Row>) => {
-      return n.concat(emptyRow());
+      return n.concat(emptyRow);
     },
     state
   );
@@ -141,7 +139,7 @@ const handleCalcKeyPegs = (state: T.State): T.State => {
       const b = R.over(
         l3,
         (n: Array<T.Row>) => {
-         return n.concat(emptyRow());
+         return n.concat(emptyRow);
         },
         a
       );
