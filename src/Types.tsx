@@ -40,6 +40,11 @@ export const BlueCodePeg: CodePeg = {
   color: 'Blue'
 };
 
+export const YellowCodePeg: CodePeg = {
+  kind: 'Code-peg',
+  color: 'Yellow'
+};
+
 export const CodeHole: EmptyCodeSlot = {
   kind: 'Code-hole',
   color: 'Dark-Grey'

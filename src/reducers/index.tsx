@@ -24,32 +24,29 @@ const initialState: T.State = {
   solution: [T.RedCodePeg, T.GreenCodePeg, T.GreenCodePeg, T.BlueCodePeg]
 };
 
-const nextCodeSlot = (codeSlot: T.CodeSlot): T.CodeSlot => {
-  switch (codeSlot.kind) {
-    case 'Code-peg': {
-      return {
-        kind: 'Code-peg',
-        color: nextColor(codeSlot.color)
-      };
-    }
-    case 'Code-hole': return T.RedCodePeg;
+const nextCodePeg = (color: string): T.CodePeg => {
+  switch (color) {
+    case 'Red':
+      return T.BlueCodePeg;
+    case 'Blue':
+      return T.GreenCodePeg;
+    case 'Green':
+      return T.YellowCodePeg;
+    case 'Yellow':
+      return T.RedCodePeg;
     default:
       return T.RedCodePeg;
   }
 };
 
-const nextColor = (color: string): string => {
-  switch (color) {
-    case 'Red':
-      return 'Blue';
-    case 'Blue':
-      return 'Green';
-    case 'Green':
-      return 'Yellow';
-    case 'Yellow':
-      return 'Red';
+const nextCodeSlot = (codeSlot: T.CodeSlot): T.CodeSlot => {
+  switch (codeSlot.kind) {
+    case 'Code-peg':
+      return nextCodePeg(codeSlot.color);
+    case 'Code-hole':
+      return T.RedCodePeg;
     default:
-      return color;
+      return T.RedCodePeg;
   }
 };
 
