@@ -42,6 +42,14 @@ const KeySlots = (state, dispatch, rowIndex) => {
   });
 };
 
+const Rows = (state, dispatch) => {
+  return state.board.map((_, index) => {
+    return (
+      <Row state={state} dispatch={dispatch} rowIndex={index} />
+    );
+  });
+};
+
 const Row = ({ state, dispatch, rowIndex }: any) => {
   return (
     <div id="Row" className="Grey">
@@ -56,7 +64,7 @@ const Row = ({ state, dispatch, rowIndex }: any) => {
 const Mastermind = ({ state, dispatch }: any) => {
   return (
     <div>
-      <Row state={state} dispatch={dispatch} rowIndex={0}/>
+      {Rows(state, dispatch)}
     </div>
   );
 };
