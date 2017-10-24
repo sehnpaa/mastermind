@@ -1,6 +1,7 @@
 import * as R from 'ramda';
 import * as T from '../Types';
 import * as L from '../Lenses';
+import { calcKeyPegs } from './calcKeyPegs';
 
 const emptyRow: T.Row = {
   codeSlots: [
@@ -124,7 +125,7 @@ const handleCalcKeyPegs = (state: T.State): T.State => {
   const l3 = L.boardProp();
   switch (guessCompleteness(R.view(l, state))) {
     case T.CompleteGuess:
-      const keyPegs = [T.BlackKeyPeg, T.BlackKeyPeg, T.BlackKeyPeg, T.KeyHole];
+      const keyPegs = calcKeyPegs(R.view(l, state), state.solution);
       const a = R.set(l2, keyPegs, state);
       const b = R.over(
         l3,
